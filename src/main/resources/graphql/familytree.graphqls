@@ -1,0 +1,18 @@
+ type Query {
+        # The API Version
+        version: String!
+  }
+
+ type Mutation {
+    issueCard(amount:Int)
+ }
+
+ type CardSummary {
+    id: ID!
+    initialAmount: Int
+    remainingAmount: Int
+ }
+
+ extend type Query {
+    cardSummaries(size:Int, offset:Int): [CardSummary]
+ }
