@@ -31,8 +31,9 @@ class IssueCardMutationResolver: GraphQLMutationResolver {
     @Autowired
     lateinit var commandGateway: CommandGateway
 
-    fun issueCard(amount:Int){
+    fun issueCard(amount:Int):String{
         val id = UUID.randomUUID()
         commandGateway.sendAndWait<IssueCmd>(IssueCmd(id.toString(), amount))
+        return id.toString()
     }
 }

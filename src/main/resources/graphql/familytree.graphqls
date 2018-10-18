@@ -4,8 +4,13 @@
   }
 
  type Mutation {
-    issueCard(amount:Int)
+    version: String!
  }
+
+ extend type Mutation {
+    issueCard(amount:Int): String!
+ }
+
 
  type CardSummary {
     id: ID!
