@@ -2,7 +2,6 @@ package com.example.axongettingstarted
 
 import org.axonframework.eventhandling.EventHandler
 import org.axonframework.queryhandling.QueryHandler
-import org.springframework.stereotype.Component
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.stream.Collectors
 

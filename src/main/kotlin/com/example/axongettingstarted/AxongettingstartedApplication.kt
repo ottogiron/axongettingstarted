@@ -5,12 +5,29 @@ import org.axonframework.config.EventHandlingConfiguration
 import org.axonframework.eventsourcing.eventstore.EmbeddedEventStore
 import org.axonframework.eventsourcing.eventstore.inmemory.InMemoryEventStorageEngine
 import org.axonframework.queryhandling.responsetypes.ResponseTypes
-import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.runApplication
 
-class AxongettingstartedApplication
 
+
+import org.jooby.*
+
+/**
+ * Kotlin stater project.
+ */
+class App : Kooby({
+
+    get {
+        val name = param("name").value("Jooby")
+        "Hello $name!"
+    }
+
+})
+
+
+/**
+ * Run application:
+ */
 fun main(args: Array<String>) {
+
     val cardSummaryProjection = CardSummaryProjection()
     val eventHandlingConfiguration = EventHandlingConfiguration()
     eventHandlingConfiguration.registerEventHandler { cardSummaryProjection}
@@ -33,5 +50,5 @@ fun main(args: Array<String>) {
     queryGateway.query(FetchCardSummariesQuery(2,0), ResponseTypes.multipleInstancesOf(CardSummary::class.java))
             .get()
             .forEach {println(it)}
-
+    run(::App, *args)
 }
