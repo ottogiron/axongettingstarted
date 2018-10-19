@@ -5,16 +5,27 @@ buildscript {
 		graphQLSpringBoot = "5.0.2"
         axonVersion = '3.3.3'
 		graphQLTools = '5.2.4'
+        //Jooby
+		junitPlatformVersion = "1.0.0"
+		spekVersion = "1.1.5"
+		joobyVersion = "1.5.0"
 
 	}
 	repositories {
 		mavenCentral()
 	}
 	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
-		classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
-		classpath("org.jetbrains.kotlin:kotlin-noarg:${kotlinVersion}")
+//		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+//		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
+//		classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
+//		classpath("org.jetbrains.kotlin:kotlin-noarg:${kotlinVersion}")
+//        //Jooby
+        classpath "com.google.gradle:osdetector-gradle-plugin:1.4.0"
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.4.RELEASE"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath "org.jooby:jooby-gradle-plugin:$joobyVersion"
+        classpath "org.junit.platform:junit-platform-gradle-plugin:$junitPlatformVersion"
+
 	}
 }
 
@@ -28,6 +39,13 @@ apply plugin: 'io.spring.dependency-management'
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
+mainClassName = "starter.kotlin.AxongettingstartedApplicationKt"
+dependencyManagement {
+    imports {
+        mavenBom "org.jooby:jooby-bom:$joobyVersion"
+    }
+}
+
 compileKotlin {
 	kotlinOptions {
 		freeCompilerArgs = ["-Xjsr305=strict"]
@@ -49,16 +67,24 @@ repositories {
 
 
 dependencies {
-	implementation('org.springframework.boot:spring-boot-starter-data-jpa')
-	implementation("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
-	implementation('com.fasterxml.jackson.module:jackson-module-kotlin')
-	implementation("org.axonframework:axon-spring-boot-starter:${axonVersion}")
-	implementation ("com.graphql-java:graphiql-spring-boot-starter:${graphQLSpringBoot}")
-	implementation ("com.graphql-java:graphql-java-tools:${graphQLTools}")
-	runtime("org.springframework.boot:spring-boot-devtools")
-	implementation "com.graphql-java:graphql-spring-boot-starter:${graphQLSpringBoot}"
-	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	compile("com.h2database:h2")
-	testImplementation('org.springframework.boot:spring-boot-starter-test')
+    implementation("org.axonframework:axon-core:${axonVersion}")
+    implementation ("com.graphql-java:graphql-java-tools:${graphQLTools}")
+
+
+    //Jooby
+    compile "org.jooby:jooby-lang-kotlin"
+    compile "org.jooby:jooby-netty"
+    compile "io.netty:netty-transport-native-epoll:${dependencyManagement.importedProperties['netty.version']}:${osdetector.classifier.contains('linux') ? 'linux-x86_64' : ''}"
+    compile "io.netty:netty-tcnative-boringssl-static:${dependencyManagement.importedProperties['boringssl.version']}:${osdetector.classifier}"
+
+    testCompile "org.jetbrains.spek:spek-api:$spekVersion"
+    testRuntime "org.jetbrains.spek:spek-junit-platform-engine:$spekVersion"
+    testCompile "org.junit.platform:junit-platform-launcher:$junitPlatformVersion"
+    testCompile "org.amshove.kluent:kluent:1.35"
+    testCompile "io.rest-assured:rest-assured:3.1.0"
+}
+
+/** We diverge from the default resources structure to adopt the Jooby standard: */
+sourceSets.main.resources {
+    srcDirs = ["conf", "public"]
 }

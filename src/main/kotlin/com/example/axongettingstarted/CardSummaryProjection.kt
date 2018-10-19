@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.stream.Collectors
 
-@Component
 class CardSummaryProjection {
     private val cardSummaries = CopyOnWriteArrayList<CardSummary>()
 
