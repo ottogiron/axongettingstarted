@@ -5,5 +5,5 @@ import org.springframework.stereotype.Component
 
 @Component
 class Mutation: GraphQLMutationResolver {
-    fun version() = "1.0.2"
+    fun version() = "1.0.3"
 }
